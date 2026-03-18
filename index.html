@@ -424,6 +424,91 @@
     .map-label { font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; fill: var(--text); font-weight: 600; }
     .map-label-sub { font-size: 9px; fill: var(--text-light); font-weight: 400; }
 
+    /* TimeShifter */
+    .ts-phase { margin-bottom: 2rem; }
+    .ts-phase-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .ts-phase-icon { font-size: 1.5rem; }
+    .ts-phase-title { font-size: 1.2rem; font-weight: 700; }
+    .ts-phase-subtitle { font-size: 0.85rem; color: var(--text-light); }
+    .ts-day { margin-bottom: 1.25rem; }
+    .ts-day-label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .ts-day-date { font-weight: 400; color: var(--text-light); font-size: 0.85rem; }
+    .ts-items { display: flex; flex-direction: column; gap: 0.4rem; }
+    .ts-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+    .ts-item-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .ts-item-time { font-weight: 600; color: var(--primary-dark); min-width: 3.5rem; flex-shrink: 0; }
+    .ts-item.light { background: #fefce8; }
+    .ts-item.avoid-light { background: #f1f5f9; }
+    .ts-item.caffeine { background: #ecfdf5; }
+    .ts-item.melatonin { background: #ede9fe; }
+    .ts-item.sleep { background: #e0f2fe; }
+    .ts-item.exercise { background: #fff7ed; }
+    .ts-item.food { background: #fef2f2; }
+    .ts-item.tip { background: #f0fdf4; border: 1px dashed #86efac; }
+    .ts-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+    .ts-legend-item { display: flex; align-items: center; gap: 0.3rem; }
+    .ts-info-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+      border: 1px solid #86efac;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .ts-info-box strong { color: var(--primary-dark); }
+    .ts-toggle-group {
+      display: flex;
+      gap: 0;
+      margin-bottom: 1.5rem;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .ts-toggle {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      border: none;
+      background: var(--card);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-light);
+      transition: all 0.2s;
+    }
+    .ts-toggle:not(:last-child) { border-right: 1px solid var(--border); }
+    .ts-toggle.active { background: var(--primary); color: white; font-weight: 600; }
+    .ts-toggle:hover:not(.active) { background: var(--bg); }
+
     /* Print styles */
     @media print {
       .nav { display: none; }
@@ -472,6 +557,7 @@
     <button class="nav-btn" data-tab="transport">Travel</button>
     <button class="nav-btn" data-tab="documents">Documents</button>
     <button class="nav-btn" data-tab="info">Important Info</button>
+    <button class="nav-btn" data-tab="jetlag">Jet Lag Plan</button>
   </nav>
 
   <div class="content">
@@ -511,6 +597,11 @@
     <!-- Important Info -->
     <div class="tab-panel" id="tab-info" data-title="Important Information">
       <div id="info-list"></div>
+    </div>
+
+    <!-- Jet Lag Plan -->
+    <div class="tab-panel" id="tab-jetlag" data-title="Jet Lag Plan">
+      <div id="jetlag-content"></div>
     </div>
   </div>
 
@@ -577,6 +668,7 @@
       renderTransport();
       renderDocuments();
       renderInfo();
+      renderJetLag();
     }
 
     function renderHeader() {
@@ -941,6 +1033,258 @@
       }
 
       container.innerHTML = html;
+    }
+
+    function renderJetLag() {
+      const container = document.getElementById('jetlag-content');
+
+      // Outbound: SFO (UTC-7 PDT) → Bali WITA (UTC+8) = 15h east = effectively 9h west (delay)
+      // Return: Bali WITA (UTC+8) → SFO (UTC-7 PDT) = 15h west = effectively 9h east (advance)
+      // Tmin assumption: typical wake ~7 AM → Tmin ~5 AM home time
+
+      const outbound = {
+        title: 'Outbound: San Francisco \u2192 Bali',
+        subtitle: 'PDT (UTC\u22127) to WITA (UTC+8) \u2014 15h shift, body delays 9h (easier direction)',
+        icon: '\u2708\ufe0f',
+        days: [
+          {
+            label: 'Pre-Flight Day 1',
+            date: 'Thu, Mar 26',
+            items: [
+              { type: 'sleep', icon: '\ud83d\ude34', time: '', text: 'Go to bed 1\u20131.5 hours LATER than normal (e.g. 12:00\u201312:30 AM instead of 11 PM)' },
+              { type: 'light', icon: '\u2600\ufe0f', time: 'Evening', text: 'Get bright light exposure in the evening (outdoor walk or bright indoor lights until 10 PM)' },
+              { type: 'avoid-light', icon: '\ud83d\ude0e', time: 'Morning', text: 'Wear sunglasses for the first hour after waking \u2014 delay your light exposure' },
+              { type: 'caffeine', icon: '\u2615', time: 'After 9 AM', text: 'Delay morning coffee by ~1 hour. No caffeine after 4 PM.' },
+            ]
+          },
+          {
+            label: 'Pre-Flight Day 2',
+            date: 'Fri, Mar 27',
+            items: [
+              { type: 'sleep', icon: '\ud83d\ude34', time: '', text: 'Go to bed 2\u20133 hours LATER than normal (e.g. 1:00\u20132:00 AM)' },
+              { type: 'sleep', icon: '\u23f0', time: '', text: 'Sleep in \u2014 wake 1\u20132 hours later than usual' },
+              { type: 'light', icon: '\u2600\ufe0f', time: 'Evening', text: 'Maximize evening light exposure. Take a sunset walk.' },
+              { type: 'avoid-light', icon: '\ud83d\ude0e', time: 'Morning', text: 'Wear sunglasses until ~9:30 AM to delay your body clock' },
+              { type: 'caffeine', icon: '\u2615', time: 'After 10 AM', text: 'Push coffee later. Last caffeine by 3 PM.' },
+              { type: 'melatonin', icon: '\ud83d\udc8a', time: '8:00 AM', text: 'Optional: 0.5\u20131mg melatonin upon waking to help delay your clock (morning melatonin = phase delay)' },
+            ]
+          },
+          {
+            label: 'Departure Day',
+            date: 'Sat, Mar 28',
+            items: [
+              { type: 'sleep', icon: '\ud83d\ude34', time: '', text: 'Sleep in as late as comfortable. Your flight is at 10:50 PM \u2014 no rush.' },
+              { type: 'food', icon: '\ud83c\udf7d\ufe0f', time: '', text: 'Eat a large, protein-rich lunch. Consider starting a 14\u201316 hour fast before your first meal at Bali time (breakfast ~7 AM WITA = 4 PM PDT today).' },
+              { type: 'caffeine', icon: '\u2615', time: 'Before 2 PM', text: 'Have your last coffee. You want to be able to sleep on the plane.' },
+              { type: 'light', icon: '\u2600\ufe0f', time: 'Afternoon', text: 'Get bright light in the late afternoon/evening before heading to the airport.' },
+              { type: 'tip', icon: '\ud83d\udca1', time: '10:50 PM', text: 'Board your flight! Set your watch to Bali time (WITA) immediately. It will be 1:50 PM next day in Bali.' },
+            ]
+          },
+          {
+            label: 'On the Plane (Day 1)',
+            date: 'Sun, Mar 29 \u2014 In transit',
+            items: [
+              { type: 'sleep', icon: '\ud83d\ude34', time: '', text: 'Try to sleep for the first 6\u20138 hours of the flight (it\'s nighttime/early morning in Bali). Use eye mask + earplugs.' },
+              { type: 'avoid-light', icon: '\ud83d\ude0e', time: '', text: 'Keep window shades down while sleeping. Avoid screens.' },
+              { type: 'light', icon: '\u2600\ufe0f', time: '', text: 'When you wake (~6+ hours in), open shades or use overhead light. It\'s daytime in Bali now.' },
+              { type: 'caffeine', icon: '\u2615', time: '', text: 'Coffee OK when you wake up on the plane (aligns with Bali morning).' },
+              { type: 'food', icon: '\ud83c\udf7d\ufe0f', time: '', text: 'Break your fast when the cabin serves breakfast \u2014 eat on Bali meal schedule.' },
+              { type: 'exercise', icon: '\ud83e\uddd8', time: '', text: 'Walk the aisle every 2 hours. Stretch. Stay hydrated (water, not alcohol).' },
+            ]
+          },
+          {
+            label: 'Arrival Day',
+            date: 'Mon, Mar 30 \u2014 Bali',
+            items: [
+              { type: 'tip', icon: '\ud83d\udea8', time: '4:30 AM', text: 'Land in Ho Chi Minh City. 5.5 hour layover. Walk around the terminal \u2014 stay active.' },
+              { type: 'caffeine', icon: '\u2615', time: 'Morning', text: 'Coffee in the SGN airport is great \u2014 have a cup to stay alert.' },
+              { type: 'light', icon: '\u2600\ufe0f', time: '3:00 PM', text: 'Arrive in Bali! Get outside into natural sunlight ASAP. Even 20 minutes helps.' },
+              { type: 'avoid-light', icon: '\ud83d\ude0e', time: '', text: 'Do NOT wear sunglasses this afternoon \u2014 you want maximum light input.' },
+              { type: 'food', icon: '\ud83c\udf7d\ufe0f', time: 'Evening', text: 'Eat dinner on Bali time (6\u20138 PM). This anchors your body clock to local meals.' },
+              { type: 'sleep', icon: '\ud83d\ude34', time: '9:00\u201310:00 PM', text: 'Go to bed at local time even if you\'re not tired. You\'ll be exhausted \u2014 don\'t push past 10 PM.' },
+              { type: 'melatonin', icon: '\ud83d\udc8a', time: '9:00 PM', text: 'Take 0.5\u20131mg melatonin 30 min before target bedtime to help initiate sleep.' },
+            ]
+          },
+          {
+            label: 'Adjustment Day 1',
+            date: 'Tue, Mar 31 \u2014 Nusa Dua',
+            items: [
+              { type: 'light', icon: '\u2600\ufe0f', time: 'Morning', text: 'Get outside into morning sunlight within 30 min of waking. Pool, beach walk, breakfast outdoors.' },
+              { type: 'caffeine', icon: '\u2615', time: 'Morning', text: 'Coffee with breakfast. Last caffeine by 2 PM WITA.' },
+              { type: 'exercise', icon: '\ud83c\udfc3', time: 'Morning', text: 'Light exercise in the morning (swim, walk on beach) \u2014 helps reset your clock faster.' },
+              { type: 'avoid-light', icon: '\ud83d\ude0e', time: 'After 6 PM', text: 'Dim lights in the evening. Avoid bright screens after 8 PM.' },
+              { type: 'sleep', icon: '\ud83d\ude34', time: '10:00 PM', text: 'Target 10 PM bedtime. You should feel much more aligned today.' },
+              { type: 'tip', icon: '\ud83d\udca1', time: '', text: 'Most people are 80\u201390% adjusted by day 2 for westward travel. You\'re almost there!' },
+            ]
+          },
+        ]
+      };
+
+      const returnTrip = {
+        title: 'Return: Bali \u2192 San Francisco',
+        subtitle: 'WITA (UTC+8) to PDT (UTC\u22127) \u2014 15h shift, body advances 9h (harder direction)',
+        icon: '\ud83c\udfe0',
+        days: [
+          {
+            label: 'Pre-Return Day 1',
+            date: 'Thu, Apr 9 \u2014 Lombok',
+            items: [
+              { type: 'sleep', icon: '\u23f0', time: '', text: 'Start waking 1 hour EARLIER than your Bali routine (e.g. 6 AM instead of 7 AM).' },
+              { type: 'light', icon: '\u2600\ufe0f', time: '6:00 AM', text: 'Get bright morning sunlight immediately upon waking. Walk outside.' },
+              { type: 'avoid-light', icon: '\ud83d\ude0e', time: 'After 5 PM', text: 'Start wearing sunglasses in late afternoon. Dim indoor lights after sunset.' },
+              { type: 'caffeine', icon: '\u2615', time: 'Before noon', text: 'Have coffee early in the morning only. No caffeine after noon.' },
+              { type: 'melatonin', icon: '\ud83d\udc8a', time: '7:00 PM', text: 'Take 0.5\u20131mg melatonin in the early evening (advances your clock).' },
+              { type: 'sleep', icon: '\ud83d\ude34', time: '9:00 PM', text: 'Go to bed 1 hour earlier than usual.' },
+            ]
+          },
+          {
+            label: 'Pre-Return Day 2',
+            date: 'Fri, Apr 10 \u2014 Lombok',
+            items: [
+              { type: 'sleep', icon: '\u23f0', time: '5:00 AM', text: 'Wake at 5 AM. It will feel early, but push through.' },
+              { type: 'light', icon: '\u2600\ufe0f', time: '5:00\u20135:30 AM', text: 'Get outside immediately for bright light. Sunrise walk on the beach.' },
+              { type: 'exercise', icon: '\ud83c\udfc3', time: 'Morning', text: 'Morning exercise (even 20 min) within 1 hour of waking accelerates the clock advance.' },
+              { type: 'caffeine', icon: '\u2615', time: '5:30 AM', text: 'Coffee right away \u2014 it helps the advance. No caffeine after 11 AM.' },
+              { type: 'avoid-light', icon: '\ud83d\ude0e', time: 'After 4 PM', text: 'Sunglasses from 4 PM onward. Dim lights in your room.' },
+              { type: 'melatonin', icon: '\ud83d\udc8a', time: '6:00 PM', text: 'Melatonin at 6 PM (1 hour earlier than yesterday).' },
+              { type: 'sleep', icon: '\ud83d\ude34', time: '8:00\u20138:30 PM', text: 'Aim for 8:00\u20138:30 PM bedtime. 2 hours earlier than your Bali normal.' },
+            ]
+          },
+          {
+            label: 'Departure Day',
+            date: 'Sat, Apr 11 \u2014 Lombok to SGN',
+            items: [
+              { type: 'sleep', icon: '\u23f0', time: '4:30\u20135:00 AM', text: 'Wake early. Pack and check out of Sheraton Senggigi.' },
+              { type: 'light', icon: '\u2600\ufe0f', time: 'Morning', text: 'Get bright morning light during your transfer to the airport.' },
+              { type: 'caffeine', icon: '\u2615', time: 'Morning', text: 'Coffee in the morning. No caffeine after 10 AM (you want to sleep tonight in SGN).' },
+              { type: 'tip', icon: '\ud83d\udca1', time: '4:00 PM', text: 'Depart DPS \u2192 SGN. Arrive 6:40 PM. Overnight layover in Ho Chi Minh City.' },
+              { type: 'food', icon: '\ud83c\udf7d\ufe0f', time: 'Evening', text: 'Eat dinner in SGN on a schedule closer to SF time (it\'s ~4\u20135 AM in SF now, so eat light).' },
+              { type: 'melatonin', icon: '\ud83d\udc8a', time: '9:00 PM', text: 'Melatonin at 9 PM SGN time. Get to sleep by 10 PM.' },
+              { type: 'sleep', icon: '\ud83d\ude34', time: '10:00 PM', text: 'Sleep as long as you can. Tomorrow is a long travel day.' },
+            ]
+          },
+          {
+            label: 'Return Flight Day',
+            date: 'Sun, Apr 12 \u2014 SGN to SFO',
+            items: [
+              { type: 'light', icon: '\u2600\ufe0f', time: 'Morning', text: 'Get morning light in SGN. Walk outside if possible.' },
+              { type: 'caffeine', icon: '\u2615', time: 'Morning', text: 'Coffee OK in the morning. Consider skipping if you plan to sleep early on the flight.' },
+              { type: 'food', icon: '\ud83c\udf7d\ufe0f', time: '', text: 'Start eating on SF time. Lunch at ~12 PM SGN = ~9 PM previous day in SF. Eat breakfast before the flight.' },
+              { type: 'tip', icon: '\ud83d\udca1', time: '5:40 PM', text: 'Depart SGN \u2192 SFO (14h 15m). Set watch to PDT. It\'s ~2:40 AM in SF.' },
+              { type: 'sleep', icon: '\ud83d\ude34', time: '', text: 'Try to sleep for the first 4\u20136 hours of the flight (it\'s nighttime in SF). Eye mask on.' },
+              { type: 'light', icon: '\u2600\ufe0f', time: '', text: 'When you wake ~6 hours in, use bright light (overhead reading light, open shade). It\'s approaching SF morning.' },
+              { type: 'caffeine', icon: '\u2615', time: '', text: 'Coffee when you wake up mid-flight \u2014 aligns with SF morning. Stop by noon SF time.' },
+            ]
+          },
+          {
+            label: 'Arrival \u2014 Home',
+            date: 'Sun, Apr 12 \u2014 San Francisco',
+            items: [
+              { type: 'tip', icon: '\ud83d\udea8', time: '5:55 PM', text: 'Land at SFO! It\'s early evening. Your body thinks it\'s ~8 AM tomorrow (Bali time).' },
+              { type: 'light', icon: '\u2600\ufe0f', time: '', text: 'If there\'s still daylight, get outside for any remaining sun. Even 15 minutes helps.' },
+              { type: 'food', icon: '\ud83c\udf7d\ufe0f', time: 'Evening', text: 'Eat dinner on SF time (7\u20138 PM). Light meal \u2014 your stomach is confused.' },
+              { type: 'avoid-light', icon: '\ud83d\ude0e', time: 'After 8 PM', text: 'Dim all lights. No bright screens. Your body wants to be awake \u2014 fight it.' },
+              { type: 'melatonin', icon: '\ud83d\udc8a', time: '9:00 PM', text: 'Take 0.5\u20131mg melatonin. Get to bed by 10 PM even if you feel wide awake.' },
+              { type: 'sleep', icon: '\ud83d\ude34', time: '10:00 PM', text: 'Force bedtime. You may wake at 3\u20134 AM \u2014 that\'s normal. Stay in bed, no screens.' },
+            ]
+          },
+          {
+            label: 'Recovery Day 1',
+            date: 'Mon, Apr 13',
+            items: [
+              { type: 'light', icon: '\u2600\ufe0f', time: '6:30\u20137:00 AM', text: 'Get bright morning sunlight immediately. Walk outside for 20\u201330 min. This is the single most important thing.' },
+              { type: 'exercise', icon: '\ud83c\udfc3', time: 'Morning', text: 'Exercise within 1 hour of waking. Even a brisk 20 min walk helps.' },
+              { type: 'caffeine', icon: '\u2615', time: '7:00 AM', text: 'Coffee first thing. No caffeine after 1 PM.' },
+              { type: 'food', icon: '\ud83c\udf7d\ufe0f', time: '', text: 'Eat all meals on SF time. Breakfast, lunch, dinner at normal hours.' },
+              { type: 'avoid-light', icon: '\ud83d\ude0e', time: 'After 7 PM', text: 'Dim lights, avoid screens. Use night mode on devices.' },
+              { type: 'melatonin', icon: '\ud83d\udc8a', time: '9:00 PM', text: 'Melatonin at 9 PM. Bed by 10\u201310:30 PM.' },
+              { type: 'tip', icon: '\ud83d\udca1', time: '', text: 'Eastward re-entry takes ~1 day per hour shifted. Expect 5\u20137 days to feel fully normal. Days 2\u20133 are usually the hardest.' },
+            ]
+          },
+          {
+            label: 'Recovery Day 2',
+            date: 'Tue, Apr 14',
+            items: [
+              { type: 'light', icon: '\u2600\ufe0f', time: 'Morning', text: 'Morning sunlight again. This is your #1 tool. 30 min outdoors.' },
+              { type: 'exercise', icon: '\ud83c\udfc3', time: 'Morning', text: 'Continue morning exercise.' },
+              { type: 'caffeine', icon: '\u2615', time: '', text: 'Coffee in the morning only. No caffeine after 1 PM.' },
+              { type: 'sleep', icon: '\ud83d\ude34', time: '', text: 'If you must nap, limit to 20 min before 2 PM. Longer naps will slow adjustment.' },
+              { type: 'melatonin', icon: '\ud83d\udc8a', time: '9:00 PM', text: 'Continue melatonin for 3\u20134 more days.' },
+              { type: 'tip', icon: '\ud83d\udca1', time: '', text: 'By day 3\u20134 you should be sleeping through the night. Hang in there!' },
+            ]
+          },
+        ]
+      };
+
+      function renderPlan(plan) {
+        let html = `<div class="ts-phase">
+          <div class="ts-phase-header">
+            <span class="ts-phase-icon">${plan.icon}</span>
+            <div>
+              <div class="ts-phase-title">${plan.title}</div>
+              <div class="ts-phase-subtitle">${plan.subtitle}</div>
+            </div>
+          </div>`;
+
+        plan.days.forEach(day => {
+          html += `<div class="ts-day card">
+            <div class="ts-day-label">${day.label} <span class="ts-day-date">${day.date}</span></div>
+            <div class="ts-items">`;
+          day.items.forEach(item => {
+            html += `<div class="ts-item ${item.type}">
+              <span class="ts-item-icon">${item.icon}</span>
+              ${item.time ? `<span class="ts-item-time">${item.time}</span>` : ''}
+              <span>${item.text}</span>
+            </div>`;
+          });
+          html += '</div></div>';
+        });
+
+        html += '</div>';
+        return html;
+      }
+
+      let activeTab = 'outbound';
+
+      function renderContent() {
+        let html = `
+          <div class="ts-info-box">
+            <strong>How this works:</strong> This plan uses circadian rhythm science (the same approach as the TimeShifter app) to help you adjust faster.
+            The key tools are <strong>timed light exposure</strong> (the #1 factor), <strong>caffeine timing</strong>, <strong>melatonin</strong>, and <strong>sleep scheduling</strong>.
+            Your body clock shifts ~1.5h/day for westward travel and ~1h/day for eastward travel. Pre-shifting before your flight gives you a head start.
+          </div>
+
+          <div class="ts-legend">
+            <span class="ts-legend-item">\u2600\ufe0f Seek light</span>
+            <span class="ts-legend-item">\ud83d\ude0e Avoid light</span>
+            <span class="ts-legend-item">\u2615 Caffeine</span>
+            <span class="ts-legend-item">\ud83d\udc8a Melatonin</span>
+            <span class="ts-legend-item">\ud83d\ude34 Sleep</span>
+            <span class="ts-legend-item">\ud83c\udfc3 Exercise</span>
+            <span class="ts-legend-item">\ud83c\udf7d\ufe0f Meals</span>
+            <span class="ts-legend-item">\ud83d\udca1 Tips</span>
+          </div>
+
+          <div class="ts-toggle-group">
+            <button class="ts-toggle ${activeTab === 'outbound' ? 'active' : ''}" data-plan="outbound">\u2708\ufe0f Outbound (SFO \u2192 Bali)</button>
+            <button class="ts-toggle ${activeTab === 'return' ? 'active' : ''}" data-plan="return">\ud83c\udfe0 Return (Bali \u2192 SFO)</button>
+          </div>
+
+          <div id="ts-plan-content">
+            ${activeTab === 'outbound' ? renderPlan(outbound) : renderPlan(returnTrip)}
+          </div>
+        `;
+        container.innerHTML = html;
+
+        container.querySelectorAll('.ts-toggle').forEach(btn => {
+          btn.addEventListener('click', () => {
+            activeTab = btn.dataset.plan;
+            renderContent();
+          });
+        });
+      }
+
+      renderContent();
     }
 
     function emptyState(icon, title, text) {

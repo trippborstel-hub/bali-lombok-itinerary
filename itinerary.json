@@ -1,0 +1,322 @@
+{
+  "trip": {
+    "title": "Bali & Lombok",
+    "subtitle": "Indonesia Adventure",
+    "dates": {
+      "start": "2026-03-28",
+      "end": "2026-04-12"
+    },
+    "travelers": ["Laura Billings", "Tripp Borstel", "Theodore Borstel"]
+  },
+  "flights": [
+    {
+      "airline": "Vietnam Airlines",
+      "flightNumber": "VN 0099",
+      "from": { "code": "SFO", "city": "San Francisco", "timezone": "PDT" },
+      "to": { "code": "SGN", "city": "Ho Chi Minh City", "timezone": "ICT" },
+      "date": "2026-03-28",
+      "departureTime": "22:50",
+      "arrivalTime": "04:30 +2d",
+      "arrivalDate": "2026-03-30",
+      "bookingRef": "CG68WB",
+      "class": "Premium Economy",
+      "aircraft": "Airbus A350-900",
+      "duration": "15h 40m",
+      "seats": "15D / 15E / 15F",
+      "status": "confirmed",
+      "notes": "Departs night of Mar 28, arrives Mar 30"
+    },
+    {
+      "airline": "Vietnam Airlines",
+      "flightNumber": "VN 0641",
+      "from": { "code": "SGN", "city": "Ho Chi Minh City", "timezone": "ICT" },
+      "to": { "code": "DPS", "city": "Denpasar-Bali", "timezone": "WITA" },
+      "date": "2026-03-30",
+      "departureTime": "10:10",
+      "arrivalTime": "15:00",
+      "arrivalDate": "2026-03-30",
+      "bookingRef": "CG68WB",
+      "class": "Economy",
+      "aircraft": "Airbus A321",
+      "duration": "3h 50m",
+      "seats": "15A / 15B / 15C",
+      "status": "confirmed",
+      "notes": "Connection in SGN — 5h 40m layover"
+    },
+    {
+      "airline": "Vietnam Airlines",
+      "flightNumber": "VN 0640",
+      "from": { "code": "DPS", "city": "Denpasar-Bali", "timezone": "WITA" },
+      "to": { "code": "SGN", "city": "Ho Chi Minh City", "timezone": "ICT" },
+      "date": "2026-04-11",
+      "departureTime": "16:00",
+      "arrivalTime": "18:40",
+      "arrivalDate": "2026-04-11",
+      "bookingRef": "CG68WB",
+      "class": "Economy",
+      "aircraft": "Airbus A321",
+      "duration": "3h 40m",
+      "seats": "15A / 15B / 15C",
+      "status": "confirmed",
+      "notes": "Return leg 1 of 2"
+    },
+    {
+      "airline": "Vietnam Airlines",
+      "flightNumber": "VN 0098",
+      "from": { "code": "SGN", "city": "Ho Chi Minh City", "timezone": "ICT" },
+      "to": { "code": "SFO", "city": "San Francisco", "timezone": "PDT" },
+      "date": "2026-04-12",
+      "departureTime": "17:40",
+      "arrivalTime": "17:55",
+      "arrivalDate": "2026-04-12",
+      "bookingRef": "CG68WB",
+      "class": "Premium Economy",
+      "aircraft": "Airbus A350-900",
+      "duration": "14h 15m",
+      "seats": "14E / 15F / 14F",
+      "status": "confirmed",
+      "notes": "Overnight layover in SGN — arrives SFO same day (Apr 12)"
+    }
+  ],
+  "hotels": [
+    {
+      "name": "Ritz Carlton Nusa Dua",
+      "location": "Nusa Dua, Bali",
+      "address": "",
+      "checkIn": "2026-03-30",
+      "checkOut": "2026-04-01",
+      "bookingRef": "",
+      "roomType": "",
+      "phone": "",
+      "status": "confirmed",
+      "notes": "Arrive ~3pm from airport"
+    },
+    {
+      "name": "Chapung Sebali",
+      "location": "Ubud, Bali",
+      "address": "",
+      "checkIn": "2026-04-01",
+      "checkOut": "2026-04-04",
+      "bookingRef": "",
+      "roomType": "",
+      "phone": "",
+      "status": "confirmed",
+      "notes": "Arrive late evening after Blue Lagoon Snorkeling day trip"
+    },
+    {
+      "name": "Desa Potato Head",
+      "location": "Bali",
+      "address": "",
+      "checkIn": "2026-04-04",
+      "checkOut": "2026-04-05",
+      "bookingRef": "",
+      "roomType": "",
+      "phone": "",
+      "status": "confirmed",
+      "notes": "1 night stay; surfing day with Alex Cuthbert"
+    },
+    {
+      "name": "Sheraton Senggigi Beach Resort",
+      "location": "Senggigi, Lombok",
+      "address": "Jalan Raya Senggigi Km. 8, Senggigi, Lombok, Indonesia, 83355",
+      "checkIn": "2026-04-05",
+      "checkOut": "2026-04-11",
+      "bookingRef": "98101539",
+      "roomType": "",
+      "phone": "+62 370 693 333",
+      "status": "confirmed",
+      "notes": ""
+    }
+  ],
+  "days": [
+    {
+      "dayNumber": 1,
+      "date": "2026-03-28",
+      "title": "Departure Day",
+      "location": "San Francisco",
+      "activities": [
+        { "time": "22:50", "description": "Depart SFO → SGN on Vietnam Airlines VN 0099 (Premium Economy, 15h 40m)" }
+      ]
+    },
+    {
+      "dayNumber": 2,
+      "date": "2026-03-29",
+      "title": "In Transit",
+      "location": "In the Air",
+      "activities": [
+        { "time": "", "description": "Overnight flight SFO → Ho Chi Minh City" }
+      ]
+    },
+    {
+      "dayNumber": 3,
+      "date": "2026-03-30",
+      "title": "Arrive in Bali – Nusa Dua",
+      "location": "Bali",
+      "activities": [
+        { "time": "04:30", "description": "Arrive Ho Chi Minh City (SGN)" },
+        { "time": "10:10", "description": "Depart SGN → DPS on Vietnam Airlines VN 0641 (Economy, 3h 50m)" },
+        { "time": "15:00", "description": "Arrive Denpasar-Bali (DPS) — Welcome to Indonesia!" },
+        { "time": "~15:30", "description": "Check in at Ritz Carlton Nusa Dua" },
+        { "time": "Evening", "description": "Dinner and rest after long travel day" }
+      ]
+    },
+    {
+      "dayNumber": 4,
+      "date": "2026-03-31",
+      "title": "Nusa Dua Resort Day",
+      "location": "Bali",
+      "activities": [
+        { "time": "", "description": "Spend the day at Ritz Carlton Nusa Dua — pool, beach, relaxing" },
+        { "time": "", "description": "Explore nearby town" }
+      ]
+    },
+    {
+      "dayNumber": 5,
+      "date": "2026-04-01",
+      "title": "Blue Lagoon Snorkeling → Ubud",
+      "location": "Bali",
+      "activities": [
+        { "time": "Morning", "description": "Check out of Ritz Carlton Nusa Dua" },
+        { "time": "Day", "description": "Blue Lagoon Snorkeling with Visit Traditional Salt Factory (Viator tour)" },
+        { "time": "Evening", "description": "Arrive at Chapung Sebali, Ubud (late arrival)" }
+      ]
+    },
+    {
+      "dayNumber": 6,
+      "date": "2026-04-02",
+      "title": "Ubud Highlights Tour",
+      "location": "Bali",
+      "activities": [
+        { "time": "Day", "description": "Guided tour: Monkey Forest, Tegalalang Rice Paddy, Ulu Petanu Waterfall, Tirta Empul Temple (Viator tour)" }
+      ]
+    },
+    {
+      "dayNumber": 7,
+      "date": "2026-04-03",
+      "title": "Explore Ubud",
+      "location": "Bali",
+      "activities": [
+        { "time": "", "description": "Free day to explore Ubud on our own" }
+      ]
+    },
+    {
+      "dayNumber": 8,
+      "date": "2026-04-04",
+      "title": "Desa Potato Head – Surf Day",
+      "location": "Bali",
+      "activities": [
+        { "time": "Morning", "description": "Check out of Chapung Sebali, Ubud" },
+        { "time": "", "description": "Travel to Desa Potato Head hotel" },
+        { "time": "", "description": "Check in at Desa Potato Head (1 night)" },
+        { "time": "Afternoon", "description": "Surfing day with Alex Cuthbert" }
+      ]
+    },
+    {
+      "dayNumber": 9,
+      "date": "2026-04-05",
+      "title": "Ferry to Lombok",
+      "location": "Bali → Lombok",
+      "activities": [
+        { "time": "Morning", "description": "Check out of Desa Potato Head" },
+        { "time": "", "description": "Ferry from Bali to Lombok" },
+        { "time": "", "description": "Check in at Sheraton Senggigi Beach Resort (6 nights)" }
+      ]
+    },
+    {
+      "dayNumber": 10,
+      "date": "2026-04-06",
+      "title": "Lombok – Day 1",
+      "location": "Lombok",
+      "activities": []
+    },
+    {
+      "dayNumber": 11,
+      "date": "2026-04-07",
+      "title": "Lombok – Day 2",
+      "location": "Lombok",
+      "activities": []
+    },
+    {
+      "dayNumber": 12,
+      "date": "2026-04-08",
+      "title": "Lombok – Day 3",
+      "location": "Lombok",
+      "activities": []
+    },
+    {
+      "dayNumber": 13,
+      "date": "2026-04-09",
+      "title": "Lombok – Day 4",
+      "location": "Lombok",
+      "activities": []
+    },
+    {
+      "dayNumber": 14,
+      "date": "2026-04-10",
+      "title": "Lombok – Day 5 (Last Full Day)",
+      "location": "Lombok",
+      "activities": []
+    },
+    {
+      "dayNumber": 15,
+      "date": "2026-04-11",
+      "title": "Departure Day",
+      "location": "Lombok → Ho Chi Minh City",
+      "activities": [
+        { "time": "", "description": "Check out of Sheraton Senggigi Beach Resort" },
+        { "time": "", "description": "Transfer to Denpasar-Bali airport (DPS)" },
+        { "time": "16:00", "description": "Depart DPS → SGN on Vietnam Airlines VN 0640 (Economy, 3h 40m)" },
+        { "time": "18:40", "description": "Arrive Ho Chi Minh City (SGN) — overnight layover" }
+      ]
+    },
+    {
+      "dayNumber": 16,
+      "date": "2026-04-12",
+      "title": "Journey Home",
+      "location": "Ho Chi Minh City → San Francisco",
+      "activities": [
+        { "time": "17:40", "description": "Depart SGN → SFO on Vietnam Airlines VN 0098 (Premium Economy, 14h 15m)" },
+        { "time": "17:55", "description": "Arrive San Francisco (SFO) — same calendar day" }
+      ]
+    }
+  ],
+  "travelArrangements": [
+    {
+      "type": "Ferry",
+      "provider": "",
+      "from": "Bali",
+      "to": "Lombok",
+      "date": "2026-04-05",
+      "time": "",
+      "bookingRef": "",
+      "cost": "",
+      "status": "pending",
+      "notes": "Depart after checking out of Desa Potato Head"
+    }
+  ],
+  "documents": [
+    {
+      "type": "Passport",
+      "holder": "",
+      "number": "",
+      "expiry": "",
+      "notes": "Must be valid for at least 6 months from entry date"
+    }
+  ],
+  "importantInfo": [
+    {
+      "category": "Visa",
+      "detail": "Indonesia offers Visa on Arrival (VOA) for many nationalities — 30 days, extendable once for another 30 days. Cost approx. $35 USD."
+    },
+    {
+      "category": "Currency",
+      "detail": "Indonesian Rupiah (IDR). ATMs widely available in Bali; less so in rural Lombok. Notify your bank before traveling."
+    },
+    {
+      "category": "Emergency",
+      "detail": "Emergency number: 112. Tourist police: +62 361 224111."
+    }
+  ],
+  "packingList": [],
+  "notes": []
+}

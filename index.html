@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bali & Lombok Itinerary</title>
+  <style>
+    :root {
+      --primary: #0e7c6b;
+      --primary-light: #12a58d;
+      --primary-dark: #095e52;
+      --accent: #f0a500;
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --text: #2d3748;
+      --text-light: #718096;
+      --border: #e2e8f0;
+      --section-flight: #3b82f6;
+      --section-hotel: #8b5cf6;
+      --section-transport: #f59e0b;
+      --section-doc: #ef4444;
+      --section-info: #10b981;
+      --section-day: #0e7c6b;
+      --loc-home: #64748b;
+      --loc-transit: #f59e0b;
+      --loc-bali: #0e7c6b;
+      --loc-lombok: #3b82f6;
+      --loc-other: #a78bfa;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.5) 100%),
+                  url('https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+      color: white;
+      padding: 3rem 1.5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 200px;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: transparent;
+      opacity: 0;
+    }
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      position: relative;
+      letter-spacing: 0.02em;
+    }
+    .header .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-top: 0.25rem;
+      position: relative;
+    }
+    .header .dates {
+      margin-top: 0.75rem;
+      font-size: 0.95rem;
+      opacity: 0.85;
+      position: relative;
+    }
+    .header .travelers {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      opacity: 0.75;
+      position: relative;
+    }
+
+    /* Countdown */
+    .countdown-bar {
+      background: var(--primary-dark);
+      color: white;
+      text-align: center;
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+    .countdown-bar.hidden { display: none; }
+
+    /* Navigation */
+    .nav {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav-btn {
+      flex: 0 0 auto;
+      padding: 0.85rem 1.25rem;
+      border: none;
+      background: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-light);
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { color: var(--text); background: var(--bg); }
+    .nav-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Content */
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: box-shadow 0.2s;
+    }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+    .card-accent {
+      border-left: 4px solid var(--primary);
+      padding-left: 1.25rem;
+    }
+    .card-accent.flight { border-left-color: var(--section-flight); }
+    .card-accent.hotel { border-left-color: var(--section-hotel); }
+    .card-accent.transport { border-left-color: var(--section-transport); }
+    .card-accent.doc { border-left-color: var(--section-doc); }
+    .card-accent.info { border-left-color: var(--section-info); }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    .card-title {
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+    .card-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-flight { background: #dbeafe; color: #1e40af; }
+    .badge-hotel { background: #ede9fe; color: #5b21b6; }
+    .badge-transport { background: #fef3c7; color: #92400e; }
+    .badge-doc { background: #fee2e2; color: #991b1b; }
+    .badge-confirmed { background: #d1fae5; color: #065f46; }
+    .badge-pending { background: #fef3c7; color: #92400e; }
+
+    .card-detail {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-top: 0.3rem;
+    }
+    .card-detail .icon { font-size: 1rem; flex-shrink: 0; }
+
+    .card-route {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0.75rem 0;
+      font-size: 1rem;
+    }
+    .card-route .airport {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--text);
+    }
+    .card-route .arrow {
+      color: var(--text-light);
+      font-size: 1.2rem;
+    }
+    .card-route .city {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      font-weight: 400;
+    }
+
+    /* Day timeline */
+    .day-card {
+      position: relative;
+    }
+    .day-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+    }
+    .day-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .day-title {
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+    .day-date {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+    .day-location {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: #d1fae5;
+      color: #065f46;
+      margin-left: 0.75rem;
+    }
+    .activity-list { list-style: none; padding-left: 3.25rem; }
+    .activity-item {
+      position: relative;
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+    }
+    .activity-item::before {
+      content: '';
+      position: absolute;
+      left: -1.25rem;
+      top: 0.75rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary-light);
+    }
+    .activity-time {
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-right: 0.4rem;
+    }
+
+    /* Documents grid */
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    /* Important Info */
+    .info-category {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--section-info);
+      margin-bottom: 0.25rem;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-light);
+    }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .empty-state h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 0.25rem; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* Overview stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .stat-icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
+    .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+    .stat-label { font-size: 0.8rem; color: var(--text-light); margin-top: 0.1rem; }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    /* Notes */
+    .note-card {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    /* Block Calendar */
+    .block-calendar { margin-bottom: 1.5rem; }
+    .block-calendar-bar {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 36px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .cal-block {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: default;
+      transition: opacity 0.2s;
+      min-width: 0;
+    }
+    .cal-block:hover { opacity: 0.85; }
+    .cal-tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: white;
+      padding: 0.4rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      z-index: 10;
+      pointer-events: none;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+    .cal-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--text);
+    }
+    .cal-block:hover .cal-tooltip { display: block; }
+    .block-calendar-dates {
+      display: flex;
+      margin-top: 0.3rem;
+    }
+    .cal-date-label {
+      text-align: center;
+      font-size: 0.65rem;
+      color: var(--text-light);
+    }
+    .block-calendar-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* Journey Map */
+    .journey-map { margin-bottom: 1.5rem; }
+    .journey-map svg { width: 100%; height: auto; display: block; }
+    .map-ocean { fill: #e8f4f8; }
+    .map-land { fill: #d4e6d1; stroke: #b8d4b0; stroke-width: 0.5; }
+    .map-route { fill: none; stroke: var(--primary); stroke-width: 2; stroke-dasharray: 8 4; stroke-linecap: round; }
+    .map-route-return { stroke-dasharray: 4 4; opacity: 0.45; }
+    .map-dot { stroke: white; stroke-width: 2; }
+    .map-label { font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; fill: var(--text); font-weight: 600; }
+    .map-label-sub { font-size: 9px; fill: var(--text-light); font-weight: 400; }
+
+    /* Print styles */
+    @media print {
+      .nav { display: none; }
+      .tab-panel { display: block !important; page-break-inside: avoid; }
+      .tab-panel::before {
+        content: attr(data-title);
+        display: block;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 1.5rem 0 1rem;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 0.5rem;
+      }
+      .card { box-shadow: none; break-inside: avoid; }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .header h1 { font-size: 1.7rem; }
+      .content { padding: 1rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .card { padding: 1rem; }
+      .activity-list { padding-left: 2.75rem; }
+      .block-calendar-bar { height: 28px; }
+      .cal-block { font-size: 0; }
+      .cal-date-label { font-size: 0.55rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1 id="trip-title"></h1>
+    <div class="subtitle" id="trip-subtitle"></div>
+    <div class="dates" id="trip-dates"></div>
+    <div class="travelers" id="trip-travelers"></div>
+  </div>
+
+  <div class="countdown-bar hidden" id="countdown"></div>
+
+  <nav class="nav" id="nav">
+    <button class="nav-btn active" data-tab="overview">Overview</button>
+    <button class="nav-btn" data-tab="days">Day by Day</button>
+    <button class="nav-btn" data-tab="flights">Flights</button>
+    <button class="nav-btn" data-tab="hotels">Hotels</button>
+    <button class="nav-btn" data-tab="transport">Travel</button>
+    <button class="nav-btn" data-tab="documents">Documents</button>
+    <button class="nav-btn" data-tab="info">Important Info</button>
+  </nav>
+
+  <div class="content">
+    <!-- Overview -->
+    <div class="tab-panel active" id="tab-overview" data-title="Overview">
+      <div class="stats-grid" id="stats-grid"></div>
+      <div id="overview-calendar"></div>
+      <div id="overview-map"></div>
+      <div id="overview-upcoming"></div>
+    </div>
+
+    <!-- Day by Day -->
+    <div class="tab-panel" id="tab-days" data-title="Day by Day Itinerary">
+      <div id="days-list"></div>
+    </div>
+
+    <!-- Flights -->
+    <div class="tab-panel" id="tab-flights" data-title="Flights">
+      <div id="flights-list"></div>
+    </div>
+
+    <!-- Hotels -->
+    <div class="tab-panel" id="tab-hotels" data-title="Hotels">
+      <div id="hotels-list"></div>
+    </div>
+
+    <!-- Transport -->
+    <div class="tab-panel" id="tab-transport" data-title="Travel Arrangements">
+      <div id="transport-list"></div>
+    </div>
+
+    <!-- Documents -->
+    <div class="tab-panel" id="tab-documents" data-title="Documents">
+      <div class="doc-grid" id="documents-list"></div>
+    </div>
+
+    <!-- Important Info -->
+    <div class="tab-panel" id="tab-info" data-title="Important Information">
+      <div id="info-list"></div>
+    </div>
+  </div>
+
+  <script>
+    let data = {};
+
+    async function loadData() {
+      try {
+        const resp = await fetch('itinerary.json?v=' + Date.now());
+        data = await resp.json();
+      } catch (e) {
+        console.error('Failed to load itinerary.json:', e);
+        data = { trip: { title: 'Bali & Lombok', subtitle: 'Indonesia Adventure' }, flights: [], hotels: [], days: [], travelArrangements: [], documents: [], importantInfo: [], notes: [] };
+      }
+      render();
+    }
+
+    // Tab switching
+    document.getElementById('nav').addEventListener('click', (e) => {
+      if (!e.target.classList.contains('nav-btn')) return;
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      e.target.classList.add('active');
+      document.getElementById('tab-' + e.target.dataset.tab).classList.add('active');
+    });
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function formatDateTime(dateStr, timeStr) {
+      if (!dateStr) return '';
+      let str = formatDate(dateStr);
+      if (timeStr) str += ' at ' + timeStr;
+      return str;
+    }
+
+    function daysUntil(dateStr) {
+      if (!dateStr) return null;
+      const now = new Date();
+      now.setHours(0,0,0,0);
+      const target = new Date(dateStr + 'T00:00:00');
+      return Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+    }
+
+    function tripDuration() {
+      const s = data.trip?.dates?.start;
+      const e = data.trip?.dates?.end;
+      if (!s || !e) return null;
+      const start = new Date(s + 'T00:00:00');
+      const end = new Date(e + 'T00:00:00');
+      return Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    }
+
+    function render() {
+      renderHeader();
+      renderCountdown();
+      renderOverview();
+      renderDays();
+      renderFlights();
+      renderHotels();
+      renderTransport();
+      renderDocuments();
+      renderInfo();
+    }
+
+    function renderHeader() {
+      document.getElementById('trip-title').textContent = data.trip?.title || 'Trip Itinerary';
+      const sub = document.getElementById('trip-subtitle');
+      sub.textContent = data.trip?.subtitle || '';
+      sub.style.display = data.trip?.subtitle ? '' : 'none';
+
+      const datesEl = document.getElementById('trip-dates');
+      const s = data.trip?.dates?.start;
+      const e = data.trip?.dates?.end;
+      if (s && e) {
+        const dur = tripDuration();
+        datesEl.textContent = formatDate(s) + '  \u2014  ' + formatDate(e) + (dur ? ` (${dur} nights)` : '');
+      } else if (s) {
+        datesEl.textContent = 'Starting ' + formatDate(s);
+      } else {
+        datesEl.textContent = 'Dates TBD';
+      }
+
+      const travelers = data.trip?.travelers || [];
+      const tEl = document.getElementById('trip-travelers');
+      if (travelers.length) {
+        tEl.textContent = travelers.join(' \u00b7 ');
+      } else {
+        tEl.style.display = 'none';
+      }
+    }
+
+    function renderCountdown() {
+      const el = document.getElementById('countdown');
+      const days = daysUntil(data.trip?.dates?.start);
+      if (days !== null && days > 0) {
+        el.textContent = `${days} day${days !== 1 ? 's' : ''} until departure!`;
+        el.classList.remove('hidden');
+      } else if (days !== null && days === 0) {
+        el.textContent = "Today's the day! Have an amazing trip!";
+        el.classList.remove('hidden');
+      }
+    }
+
+    function classifyLocation(loc) {
+      const s = (loc || '').toLowerCase();
+      if (s.includes('bali') && !s.includes('lombok')) return 'bali';
+      if (s.includes('lombok')) return 'lombok';
+      if (s.includes('san francisco')) return 'home';
+      if (s.includes('in the air') || s.includes('transit') || s.includes('ho chi minh') || s.includes('\u2192') || s.includes('->')) return 'transit';
+      return 'other';
+    }
+
+    function renderBlockCalendar() {
+      const container = document.getElementById('overview-calendar');
+      if (!data.days?.length) { container.innerHTML = ''; return; }
+
+      const colorMap = { home: 'var(--loc-home)', transit: 'var(--loc-transit)', bali: 'var(--loc-bali)', lombok: 'var(--loc-lombok)', other: 'var(--loc-other)' };
+      const labelMap = { home: 'San Francisco', transit: 'Travel / Transit', bali: 'Bali', lombok: 'Lombok', other: 'Other' };
+
+      const blocks = data.days.map(day => {
+        const cat = classifyLocation(day.location);
+        const color = colorMap[cat];
+        const dateObj = new Date(day.date + 'T00:00:00');
+        const shortDate = dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+        const wd = dateObj.toLocaleDateString('en-US', { weekday: 'narrow' });
+        return `<div class="cal-block" style="flex:1;background:${color};">
+          <span>${wd}</span>
+          <div class="cal-tooltip">Day ${day.dayNumber}: ${day.title}<br>${shortDate} \u00b7 ${day.location}</div>
+        </div>`;
+      });
+
+      const dateLabels = data.days.map(day => {
+        const d = new Date(day.date + 'T00:00:00').getDate();
+        return `<div class="cal-date-label" style="flex:1;">${d}</div>`;
+      });
+
+      const usedCats = [...new Set(data.days.map(d => classifyLocation(d.location)))];
+      const legend = usedCats.map(cat =>
+        `<div class="legend-item"><div class="legend-dot" style="background:${colorMap[cat]};"></div>${labelMap[cat]}</div>`
+      ).join('');
+
+      container.innerHTML = `
+        <div class="card block-calendar">
+          <h2 class="section-title" style="margin-bottom:0.75rem;">Trip at a Glance</h2>
+          <div class="block-calendar-bar">${blocks.join('')}</div>
+          <div class="block-calendar-dates">${dateLabels.join('')}</div>
+          <div class="block-calendar-legend">${legend}</div>
+        </div>
+      `;
+    }
+
+    function renderJourneyMap() {
+      const container = document.getElementById('overview-map');
+      if (!data.flights?.length) { container.innerHTML = ''; return; }
+
+      const wp = {
+        SFO: { x: 870, y: 115, label: 'San Francisco', sub: 'SFO', cat: 'home' },
+        SGN: { x: 260, y: 215, label: 'Ho Chi Minh City', sub: 'SGN', cat: 'transit' },
+        DPS: { x: 340, y: 340, label: 'Bali', sub: 'DPS', cat: 'bali' },
+        LOP: { x: 375, y: 350, label: 'Lombok', sub: 'LOP', cat: 'lombok' },
+      };
+
+      const land = [
+        'M 800,30 L 840,50 865,75 880,100 890,140 875,175 855,200 830,215 810,200 790,160 785,110 790,70 Z',
+        'M 200,100 L 245,95 275,110 300,130 310,165 300,200 280,225 255,235 235,225 215,200 195,170 185,140 Z',
+        'M 210,280 L 250,275 285,285 310,300 330,315 350,330 370,338 395,345 400,355 380,362 345,358 310,348 275,335 245,318 225,305 215,290 Z',
+        'M 300,250 L 335,242 358,260 352,288 325,295 305,278 Z',
+        'M 325,155 L 345,148 358,165 352,190 338,198 322,182 Z',
+        'M 130,90 L 175,80 195,95 190,120 160,130 135,115 Z',
+        'M 400,295 L 430,288 448,300 445,320 425,328 405,315 Z',
+      ];
+
+      const sfo = wp.SFO, sgn = wp.SGN, dps = wp.DPS, lop = wp.LOP;
+      const outbound = `M ${sfo.x},${sfo.y} C ${sfo.x - 250},${sfo.y - 130} ${sgn.x + 250},${sgn.y - 140} ${sgn.x},${sgn.y}`;
+      const sgnToDps = `M ${sgn.x},${sgn.y} C ${sgn.x + 30},${sgn.y + 60} ${dps.x - 40},${dps.y - 40} ${dps.x},${dps.y}`;
+      const dpsToLop = `M ${dps.x},${dps.y} L ${lop.x},${lop.y}`;
+      const lopToDps = `M ${lop.x},${lop.y} L ${dps.x},${dps.y}`;
+      const dpsToSgn = `M ${dps.x},${dps.y} C ${dps.x - 40},${dps.y - 40} ${sgn.x + 30},${sgn.y + 60} ${sgn.x},${sgn.y}`;
+      const returnFlight = `M ${sgn.x},${sgn.y} C ${sgn.x + 250},${sgn.y - 140} ${sfo.x - 250},${sfo.y - 130} ${sfo.x},${sfo.y}`;
+
+      const dotR = 7;
+      const catColor = { home: 'var(--loc-home)', transit: 'var(--loc-transit)', bali: 'var(--loc-bali)', lombok: 'var(--loc-lombok)' };
+
+      const waypointsSvg = Object.values(wp).map(w => `
+        <circle class="map-dot" cx="${w.x}" cy="${w.y}" r="${dotR}" fill="${catColor[w.cat]}"/>
+        <text class="map-label" x="${w.x}" y="${w.y - 16}" text-anchor="middle">${w.label}</text>
+        <text class="map-label-sub" x="${w.x}" y="${w.y - 4 - 16}" text-anchor="middle">${w.sub}</text>
+      `).join('');
+
+      const svg = `
+        <svg viewBox="0 0 960 400" xmlns="http://www.w3.org/2000/svg">
+          <rect class="map-ocean" width="960" height="400" rx="8"/>
+          ${land.map(d => `<path class="map-land" d="${d}"/>`).join('')}
+          <path class="map-route" d="${outbound}"/>
+          <path class="map-route" d="${sgnToDps}"/>
+          <path class="map-route" d="${dpsToLop}" style="stroke-dasharray:4 3;"/>
+          <path class="map-route map-route-return" d="${lopToDps}"/>
+          <path class="map-route map-route-return" d="${dpsToSgn}"/>
+          <path class="map-route map-route-return" d="${returnFlight}"/>
+          ${waypointsSvg}
+        </svg>
+      `;
+
+      container.innerHTML = `
+        <div class="card journey-map">
+          <h2 class="section-title" style="margin-bottom:0.75rem;">Journey Route</h2>
+          ${svg}
+        </div>
+      `;
+    }
+
+    function renderOverview() {
+      const dur = tripDuration();
+      const stats = [
+        { icon: '\u2708\ufe0f', value: data.flights?.length || 0, label: 'Flights' },
+        { icon: '\ud83c\udfe8', value: data.hotels?.length || 0, label: 'Hotels' },
+        { icon: '\ud83d\udcc5', value: dur || '?', label: 'Nights' },
+        { icon: '\ud83d\ude95', value: data.travelArrangements?.length || 0, label: 'Transfers' },
+      ];
+
+      document.getElementById('stats-grid').innerHTML = stats.map(s => `
+        <div class="stat-card">
+          <div class="stat-icon">${s.icon}</div>
+          <div class="stat-value">${s.value}</div>
+          <div class="stat-label">${s.label}</div>
+        </div>
+      `).join('');
+
+      // Block calendar and journey map
+      renderBlockCalendar();
+      renderJourneyMap();
+
+      // Show upcoming flights/hotels
+      let upcoming = '';
+      if (data.flights?.length) {
+        upcoming += '<h2 class="section-title">Upcoming Flights</h2>';
+        data.flights.slice(0, 2).forEach(f => {
+          upcoming += renderFlightCard(f);
+        });
+      }
+      if (data.hotels?.length) {
+        upcoming += '<h2 class="section-title">Hotel Stays</h2>';
+        data.hotels.slice(0, 2).forEach(h => {
+          upcoming += renderHotelCard(h);
+        });
+      }
+      if (!data.flights?.length && !data.hotels?.length) {
+        upcoming = emptyState('\ud83c\udf34', 'Your trip is taking shape!', 'Share your flight bookings, hotel reservations, and plans to start building the itinerary.');
+      }
+      document.getElementById('overview-upcoming').innerHTML = upcoming;
+    }
+
+    function renderFlightCard(f) {
+      const status = f.status || 'pending';
+      const badgeClass = status === 'confirmed' ? 'badge-confirmed' : 'badge-pending';
+      const depTz = f.from?.timezone ? ` ${f.from.timezone}` : '';
+      const arrTz = f.to?.timezone ? ` ${f.to.timezone}` : '';
+      const arrDisplay = f.arrivalTime ? ` \u2014 ${f.arrivalTime}${arrTz}` : '';
+      return `
+        <div class="card card-accent flight">
+          <div class="card-header">
+            <div class="card-title">${f.airline || 'Flight'}${f.flightNumber ? ' ' + f.flightNumber : ''}</div>
+            <span class="card-badge ${badgeClass}">${status}</span>
+          </div>
+          <div class="card-route">
+            <div>
+              <div class="airport">${f.from?.code || '???'}</div>
+              <div class="city">${f.from?.city || ''}</div>
+            </div>
+            <div class="arrow">\u2192</div>
+            <div>
+              <div class="airport">${f.to?.code || '???'}</div>
+              <div class="city">${f.to?.city || ''}</div>
+            </div>
+          </div>
+          ${f.class ? `<div class="card-detail"><span class="icon">\u2728</span> ${f.class}${f.duration ? ' \u00b7 ' + f.duration : ''}</div>` : ''}
+          <div class="card-detail"><span class="icon">\ud83d\udcc5</span> ${formatDate(f.date)} \u00b7 ${f.departureTime || ''}${depTz}${arrDisplay}</div>
+          ${f.bookingRef ? `<div class="card-detail"><span class="icon">\ud83d\udcce</span> Ref: ${f.bookingRef}</div>` : ''}
+          ${f.seats ? `<div class="card-detail"><span class="icon">\ud83d\udcba</span> Seats: ${f.seats}</div>` : ''}
+          ${f.notes ? `<div class="card-detail"><span class="icon">\ud83d\udcdd</span> ${f.notes}</div>` : ''}
+        </div>
+      `;
+    }
+
+    function renderHotelCard(h) {
+      const status = h.status || 'pending';
+      const badgeClass = status === 'confirmed' ? 'badge-confirmed' : 'badge-pending';
+      const nights = (h.checkIn && h.checkOut) ? daysUntil(h.checkOut) - daysUntil(h.checkIn) : null;
+      return `
+        <div class="card card-accent hotel">
+          <div class="card-header">
+            <div class="card-title">${h.name || 'Hotel'}</div>
+            <span class="card-badge ${badgeClass}">${status}</span>
+          </div>
+          ${h.location ? `<div class="card-detail"><span class="icon">\ud83d\udccd</span> ${h.location}</div>` : ''}
+          <div class="card-detail"><span class="icon">\ud83d\udcc5</span> ${formatDate(h.checkIn)} \u2014 ${formatDate(h.checkOut)}${nights ? ` (${nights} nights)` : ''}</div>
+          ${h.bookingRef ? `<div class="card-detail"><span class="icon">\ud83d\udcce</span> Ref: ${h.bookingRef}</div>` : ''}
+          ${h.roomType ? `<div class="card-detail"><span class="icon">\ud83d\udecf\ufe0f</span> ${h.roomType}</div>` : ''}
+          ${h.address ? `<div class="card-detail"><span class="icon">\ud83c\udfe0</span> ${h.address}</div>` : ''}
+          ${h.phone ? `<div class="card-detail"><span class="icon">\ud83d\udcde</span> ${h.phone}</div>` : ''}
+          ${h.notes ? `<div class="card-detail"><span class="icon">\ud83d\udcdd</span> ${h.notes}</div>` : ''}
+        </div>
+      `;
+    }
+
+    function renderDays() {
+      const container = document.getElementById('days-list');
+      if (!data.days?.length) {
+        container.innerHTML = emptyState('\ud83d\udcc5', 'No days planned yet', 'Share your plans day by day and they\'ll appear here as a timeline.');
+        return;
+      }
+      container.innerHTML = data.days.map((day, i) => {
+        const activities = (day.activities || []).map(a => `
+          <li class="activity-item">
+            ${a.time ? `<span class="activity-time">${a.time}</span>` : ''}
+            ${a.description}
+          </li>
+        `).join('');
+
+        return `
+          <div class="card day-card">
+            <div class="day-header">
+              <span class="day-number">${day.dayNumber || i + 1}</span>
+              <div>
+                <div class="day-title">${day.title || 'Day ' + (day.dayNumber || i + 1)}</div>
+                <div class="day-date">${formatDate(day.date)}</div>
+              </div>
+              ${day.location ? `<span class="day-location">${day.location}</span>` : ''}
+            </div>
+            ${activities ? `<ul class="activity-list">${activities}</ul>` : '<p style="padding-left:3.25rem;color:var(--text-light);font-size:0.9rem;">No activities planned yet</p>'}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderFlights() {
+      const container = document.getElementById('flights-list');
+      if (!data.flights?.length) {
+        container.innerHTML = emptyState('\u2708\ufe0f', 'No flights added yet', 'Share your flight confirmation emails or booking details to add them here.');
+        return;
+      }
+      container.innerHTML = data.flights.map(f => renderFlightCard(f)).join('');
+    }
+
+    function renderHotels() {
+      const container = document.getElementById('hotels-list');
+      if (!data.hotels?.length) {
+        container.innerHTML = emptyState('\ud83c\udfe8', 'No hotels added yet', 'Share your hotel booking confirmations to add them here.');
+        return;
+      }
+      container.innerHTML = data.hotels.map(h => renderHotelCard(h)).join('');
+    }
+
+    function renderTransport() {
+      const container = document.getElementById('transport-list');
+      const arr = data.travelArrangements || [];
+      if (!arr.length) {
+        container.innerHTML = emptyState('\ud83d\ude95', 'No travel arrangements yet', 'Airport transfers, ferries, private drivers \u2014 add them as you book.');
+        return;
+      }
+      container.innerHTML = arr.map(t => {
+        const status = t.status || 'pending';
+        const badgeClass = status === 'confirmed' ? 'badge-confirmed' : 'badge-pending';
+        return `
+          <div class="card card-accent transport">
+            <div class="card-header">
+              <div class="card-title">${t.type || 'Transport'}${t.provider ? ' \u2014 ' + t.provider : ''}</div>
+              <span class="card-badge ${badgeClass}">${status}</span>
+            </div>
+            ${t.from && t.to ? `<div class="card-detail"><span class="icon">\ud83d\udccd</span> ${t.from} \u2192 ${t.to}</div>` : ''}
+            <div class="card-detail"><span class="icon">\ud83d\udcc5</span> ${formatDateTime(t.date, t.time)}</div>
+            ${t.bookingRef ? `<div class="card-detail"><span class="icon">\ud83d\udcce</span> Ref: ${t.bookingRef}</div>` : ''}
+            ${t.cost ? `<div class="card-detail"><span class="icon">\ud83d\udcb0</span> ${t.cost}</div>` : ''}
+            ${t.notes ? `<div class="card-detail"><span class="icon">\ud83d\udcdd</span> ${t.notes}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderDocuments() {
+      const container = document.getElementById('documents-list');
+      const docs = data.documents || [];
+      if (!docs.length) {
+        container.innerHTML = emptyState('\ud83d\udcc4', 'No documents added yet', 'Add passport details, visa info, insurance, and other key documents.');
+        return;
+      }
+      container.innerHTML = docs.map(d => `
+        <div class="card card-accent doc">
+          <div class="card-header">
+            <div class="card-title">${d.type || 'Document'}</div>
+          </div>
+          ${d.holder ? `<div class="card-detail"><span class="icon">\ud83d\udc64</span> ${d.holder}</div>` : ''}
+          ${d.number ? `<div class="card-detail"><span class="icon">\ud83d\udd22</span> ${d.number}</div>` : ''}
+          ${d.expiry ? `<div class="card-detail"><span class="icon">\ud83d\udcc5</span> Expires: ${formatDate(d.expiry)}</div>` : ''}
+          ${d.notes ? `<div class="card-detail"><span class="icon">\ud83d\udcdd</span> ${d.notes}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function renderInfo() {
+      const container = document.getElementById('info-list');
+      const items = data.importantInfo || [];
+      const notes = data.notes || [];
+
+      if (!items.length && !notes.length) {
+        container.innerHTML = emptyState('\u2139\ufe0f', 'No important info yet', 'Visa requirements, emergency contacts, currency tips \u2014 they\'ll be collected here.');
+        return;
+      }
+
+      let html = items.map(item => `
+        <div class="card card-accent info">
+          <div class="info-category">${item.category || 'Info'}</div>
+          <div style="font-size:0.95rem;">${item.detail}</div>
+        </div>
+      `).join('');
+
+      if (notes.length) {
+        html += '<h2 class="section-title" style="margin-top:1.5rem;">Notes</h2>';
+        html += notes.map(n => `
+          <div class="card note-card">
+            <div style="font-size:0.95rem;">${typeof n === 'string' ? n : n.text || ''}</div>
+          </div>
+        `).join('');
+      }
+
+      container.innerHTML = html;
+    }
+
+    function emptyState(icon, title, text) {
+      return `<div class="empty-state"><div class="icon">${icon}</div><h3>${title}</h3><p>${text}</p></div>`;
+    }
+
+    // Load on page ready
+    loadData();
+  </script>
+
+</body>
+</html>
